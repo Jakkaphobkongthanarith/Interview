@@ -1,6 +1,6 @@
 import React from "react";
 import { useState } from "react";
-function SearchBar({ onSearch, onClear }) {
+function Searchbox({ onSearch, onClear }) {
   const [input, setInput] = useState("");
 
   const handleSearchClick = () => {
@@ -68,4 +68,4 @@ function SearchBar({ onSearch, onClear }) {
     </div>
   );
 }
-export default SearchBar;
+export default Searchbox;

@@ -1,5 +1,5 @@
 import React from "react";
-import SearchBar from "../Component/Searchbox";
+import Searchbox from "../Component/Searchbox";
 import TableCard from "../Component/Table";
 import PostModal from "../Component/postModal";
 import { useState } from "react";

@@ -99,7 +99,7 @@ const TableCard = ({ searchTerm }) => {
       {selectedItems.length > 0 && (
         <button
           onClick={handleDelete}
-          className="mb-4 px-3 py-1 border border-[#1F7B44] bg-white text-white rounded flex text-[#1F7B44]"
+          className="mb-4 px-3 py-1 border border-[#1F7B44] bg-white rounded flex text-[#1F7B44]"
         >
           Delete Selected ( {selectedItems.length} item)
         </button>
