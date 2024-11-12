@@ -3,7 +3,7 @@ import supabase from "../supabaseClient.mjs";
 
 const router = express.Router();
 
-router.delete("/deleteFood/:id", async (req, res) => {
+router.delete("/deleteData/:id", async (req, res) => {
   const { id } = req.params;
 
   if (!id) {
