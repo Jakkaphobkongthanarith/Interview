@@ -17,7 +17,7 @@ function FirstPage() {
   return (
     <div className="App bg-gray-100">
       <PostModal />
-      <SearchBar onSearch={handleSearch} onClear={handleClear} />
+      <Searchbox onSearch={handleSearch} onClear={handleClear} />
       <TableCard searchTerm={searchTerm} />
     </div>
   );
