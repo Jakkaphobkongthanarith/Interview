@@ -1,13 +1,11 @@
-import React, { useState } from "react"; // นำ useState มาใช้
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 const Navbar = () => {
-  // ใช้ useState สำหรับการเก็บข้อความ
   const [message, setMessage] = useState("");
 
   const handleClick = () => {
     setMessage("เมี้ยวๆ");
-    // ตั้งเวลาให้ข้อความหายหลัง 3 วินาที
     setTimeout(() => {
       setMessage("");
     }, 3000);
