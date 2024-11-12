@@ -9,11 +9,7 @@ const PostModal = () => {
   const [errors, setErrors] = useState({});
   const [successMessage, setSuccessMessage] = useState("");
   const [file, setFile] = useState(null);
-  const [samplingPoint, setSamplingPoint] = useState({
-    frontEnd: false,
-    backEnd: false,
-    other: false,
-  });
+  const [samplingPoint, setSamplingPoint] = useState("");
 
   const handleCheckboxChange = (event) => {
     const { name, checked } = event.target;
@@ -21,6 +17,10 @@ const PostModal = () => {
       ...prevState,
       [name]: checked,
     }));
+  };
+
+  const handleRadioChange = (event) => {
+    setSamplingPoint(event.target.value);
   };
 
   const handleFileChange = (e) => {
@@ -48,7 +48,7 @@ const PostModal = () => {
           return;
         }
 
-        const response = await fetch("http://localhost:3000/addFood", {
+        const response = await fetch("http://localhost:3000/addData", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -61,6 +61,7 @@ const PostModal = () => {
             requestID,
             imageURL,
             grains,
+            Sampling_Point: samplingPoint,
           }),
         });
 
@@ -68,7 +69,7 @@ const PostModal = () => {
           const responseData = await response.json();
           console.log("Response:", responseData);
           setSuccessMessage("Data saved successfully!");
-          setIsOpen(false);  
+          setIsOpen(false);
         } else {
           const errorData = await response.json();
           console.error("Error:", errorData);
@@ -87,7 +88,7 @@ const PostModal = () => {
       <div className="flex justify-end">
         <button
           onClick={() => setIsOpen(true)}
-          className="px-4 py-2 bg-[#1F7B44] text-white rounded-lg"
+          className="px-4 py-2 my-4 bg-[#1F7B44] text-white rounded-lg"
         >
           Create Inspection
         </button>
@@ -180,10 +181,11 @@ const PostModal = () => {
             <div className="flex items-center gap-4">
               <label className="flex items-center">
                 <input
-                  type="checkbox"
-                  name="frontEnd"
-                  checked={samplingPoint.frontEnd}
-                  onChange={handleCheckboxChange}
+                  type="radio"
+                  name="samplingPoint"
+                  value="front"
+                  checked={samplingPoint === "front"}
+                  onChange={handleRadioChange}
                   className="mr-2"
                 />
                 Front End
@@ -191,10 +193,11 @@ const PostModal = () => {
 
               <label className="flex items-center">
                 <input
-                  type="checkbox"
-                  name="backEnd"
-                  checked={samplingPoint.backEnd}
-                  onChange={handleCheckboxChange}
+                  type="radio"
+                  name="samplingPoint"
+                  value="back"
+                  checked={samplingPoint === "back"}
+                  onChange={handleRadioChange}
                   className="mr-2"
                 />
                 Back End
@@ -202,10 +205,11 @@ const PostModal = () => {
 
               <label className="flex items-center">
                 <input
-                  type="checkbox"
-                  name="other"
-                  checked={samplingPoint.other}
-                  onChange={handleCheckboxChange}
+                  type="radio"
+                  name="samplingPoint"
+                  value="other"
+                  checked={samplingPoint === "other"}
+                  onChange={handleRadioChange}
                   className="mr-2"
                 />
                 Other

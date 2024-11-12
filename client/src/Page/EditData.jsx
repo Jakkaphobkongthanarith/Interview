@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
-const EditFood = () => {
+const EditData = () => {
   const { id } = useParams();
-  const [foodItem, setFoodItem] = useState(null);
+  const [item, setItem] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [formData, setFormData] = useState({
@@ -12,11 +12,8 @@ const EditFood = () => {
     Sampling_Point: [],
     Sampling_Time: "",
   });
-  const [samplingPoint, setSamplingPoint] = useState({
-    frontEnd: false,
-    backEnd: false,
-    other: false,
-  });
+  const [samplingPoint, setSamplingPoint] = useState("");
+
   const handleCheckboxChange = (event) => {
     const { name, checked } = event.target;
     setSamplingPoint((prevState) => {
@@ -34,32 +31,29 @@ const EditFood = () => {
     });
   };
 
-  const getSelectedSamplingPoints = (samplingPointState) => {
-    const selectedPoints = [];
-    if (samplingPointState.frontEnd) selectedPoints.push("Front End");
-    if (samplingPointState.backEnd) selectedPoints.push("Back End");
-    if (samplingPointState.other) selectedPoints.push("Other");
-
-    return selectedPoints;
+  const handleRadioChange = (event) => {
+    setSamplingPoint(event.target.value);
   };
+
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchFoodItem = async () => {
+    const fetchItem = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/getFood/${id}`);
+        const response = await fetch(`http://localhost:3000/getData/${id}`);
         if (!response.ok) {
-          throw new Error("Failed to fetch food item");
+          throw new Error("Failed to fetch item");
         }
         const result = await response.json();
-        setFoodItem(result);
-        console.log("<3", result);
+        console.log("response", result);
+        setItem(result);
+        console.log("yeim", item);
         setFormData({
-          Note: result.Note || "",
-          Standard: result.Standard || "",
-          Price: result.Price || "",
-          Inspection_ID: result.Inspection_ID || "",
-          Sampling_Point: result.Sampling_Point || "",
+          Note: result.testMenu.Note || "",
+          Standard: result.testMenu.Standard || "",
+          Price: result.testMenu.Price || "",
+          Inspection_ID: result.testMenu.Inspection_ID || "",
+          Sampling_Point: result.testMenu.Sampling_Point || "",
         });
       } catch (error) {
         setError(error.message);
@@ -68,7 +62,7 @@ const EditFood = () => {
       }
     };
 
-    fetchFoodItem();
+    fetchItem();
   }, [id]);
 
   const handleChange = (e) => {
@@ -82,7 +76,7 @@ const EditFood = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`http://localhost:3000/updateFood/${id}`, {
+      const response = await fetch(`http://localhost:3000/editData/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -91,13 +85,13 @@ const EditFood = () => {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to update food item");
+        throw new Error("Failed to update item");
       }
 
-      navigate(`/viewFood/${id}`);
+      navigate(`/viewData/${id}`);
     } catch (error) {
-      console.error("Error updating food item:", error);
-      setError("Failed to update food item.");
+      console.error("Error updating item:", error);
+      setError("Failed to update item.");
     }
   };
 
@@ -108,7 +102,7 @@ const EditFood = () => {
   if (error) {
     return <p className="text-red-500">{error}</p>;
   }
-
+  console.log("fom0", formData);
   return (
     <div className="p-4 max-w-lg mx-auto bg-white rounded-lg shadow-lg">
       <h2 className="text-2xl font-bold mb-4">
@@ -116,7 +110,7 @@ const EditFood = () => {
       </h2>
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
-          <label className="p-2 block text-sm font-medium text-gray-700">
+          <label className="p-2 block text-sm font-medium text-gray-700 text-left">
             Note
           </label>
           <input
@@ -128,7 +122,7 @@ const EditFood = () => {
           />
         </div>
         <div className="mb-4">
-          <label className="p-2 block text-sm font-medium text-gray-700">
+          <label className="p-2 block text-sm font-medium text-gray-700 text-left">
             Price
           </label>
           <input
@@ -141,49 +135,50 @@ const EditFood = () => {
         </div>
 
         <div className="mb-4">
-          <label className="p-2 block text-sm font-medium text-gray-700">
+          <label className="p-2 block text-sm font-medium text-gray-700 text-left">
             Sampling Point
           </label>
-          <div className="mb-4">
-            <div className="flex justify-center gap-4">
-              <label className="flex items-center">
-                <input
-                  type="checkbox"
-                  name="frontEnd"
-                  checked={samplingPoint.frontEnd}
-                  onChange={handleCheckboxChange}
-                  className="mr-2"
-                />
-                Front End
-              </label>
+          <div className="flex items-center gap-4">
+            <label className="flex items-center">
+              <input
+                type="radio"
+                name="samplingPoint"
+                value="front"
+                checked={samplingPoint === "front"}
+                onChange={handleRadioChange}
+                className="mr-2"
+              />
+              Front End
+            </label>
 
-              <label className="flex items-center">
-                <input
-                  type="checkbox"
-                  name="backEnd"
-                  checked={samplingPoint.backEnd}
-                  onChange={handleCheckboxChange}
-                  className="mr-2"
-                />
-                Back End
-              </label>
+            <label className="flex items-center">
+              <input
+                type="radio"
+                name="samplingPoint"
+                value="back"
+                checked={samplingPoint === "back"}
+                onChange={handleRadioChange}
+                className="mr-2"
+              />
+              Back End
+            </label>
 
-              <label className="flex items-center">
-                <input
-                  type="checkbox"
-                  name="other"
-                  checked={samplingPoint.other}
-                  onChange={handleCheckboxChange}
-                  className="mr-2"
-                />
-                Other
-              </label>
-            </div>
+            <label className="flex items-center">
+              <input
+                type="radio"
+                name="samplingPoint"
+                value="other"
+                checked={samplingPoint === "other"}
+                onChange={handleRadioChange}
+                className="mr-2"
+              />
+              Other
+            </label>
           </div>
         </div>
 
         <div className="mb-4">
-          <label className="p-2 block text-sm font-medium text-gray-700">
+          <label className="p-2 block text-sm font-medium text-gray-700 text-left">
             Date and time of sampling
           </label>
           <input
@@ -195,7 +190,7 @@ const EditFood = () => {
         <div className="flex justify-between">
           <button
             type="button"
-            onClick={() => navigate(`/viewFood/${id}`)}
+            onClick={() => navigate(`/viewData/${id}`)}
             className="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400"
           >
             Cancel
@@ -212,4 +207,4 @@ const EditFood = () => {
   );
 };
 
-export default EditFood;
+export default EditData;

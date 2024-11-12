@@ -27,7 +27,7 @@ const InspectionReport = () => {
   return (
     <div className="max-w-3xl mx-auto bg-white p-6 rounded-lg shadow-lg space-y-6">
       <div className="flex justify-between text-sm text-gray-600">
-        <div>
+        <div className="my-10">
           <p>Create Date - Time: {inspectionData.createDate}</p>
           <p>Update Date - Time: {inspectionData.updateDate}</p>
         </div>
@@ -57,7 +57,9 @@ const InspectionReport = () => {
               <tr key={index} className="text-gray-700 border-b">
                 <td className="p-2">{item.name}</td>
                 <td className="p-2">{item.length}</td>
-                <td className="p-2 text-green-600 font-semibold">{item.actual}</td>
+                <td className="p-2 text-green-600 font-semibold">
+                  {item.actual}
+                </td>
               </tr>
             ))}
           </tbody>
@@ -77,7 +79,9 @@ const InspectionReport = () => {
             {inspectionData.defectRice.map((item, index) => (
               <tr key={index} className="text-gray-700 border-b">
                 <td className="p-2">{item.name}</td>
-                <td className="p-2 text-green-600 font-semibold">{item.actual}</td>
+                <td className="p-2 text-green-600 font-semibold">
+                  {item.actual}
+                </td>
               </tr>
             ))}
           </tbody>

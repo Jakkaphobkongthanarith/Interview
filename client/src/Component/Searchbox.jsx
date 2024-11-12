@@ -4,7 +4,7 @@ function SearchBar({ onSearch, onClear }) {
   const [input, setInput] = useState("");
 
   const handleSearchClick = () => {
-    onSearch(input);  
+    onSearch(input);
   };
 
   const handleClearClick = () => {
@@ -19,12 +19,12 @@ function SearchBar({ onSearch, onClear }) {
   };
 
   return (
-    <div class=" w-full p-4 bg-white shadow rounded-lg">
+    <div class=" w-full p-4 bg-white rounded-lg">
       <label
         for="search-id"
         class="block text-sm font-medium text-left text-gray-700"
       >
-        Search by ID, Name, or Standard
+        Search by Inspection ID, Name, or Standard
       </label>
       <input
         type="text"

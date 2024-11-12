@@ -1,6 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
+// ฟังก์ชันแปลงวันที่ให้เป็นรูปแบบ dd-mm-yyyy - hh:mm:ss
+const formatDate = (dateString) => {
+  const date = new Date(dateString);
+
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0"); // เดือนเริ่มจาก 0
+  const year = date.getFullYear();
+
+  const hours = String(date.getHours()).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+  const seconds = String(date.getSeconds()).padStart(2, "0");
+
+  return `${day}-${month}-${year} - ${hours}:${minutes}:${seconds}`;
+};
+
 const TableCard = ({ searchTerm }) => {
   const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -16,10 +31,11 @@ const TableCard = ({ searchTerm }) => {
   const fetchData = async (page) => {
     try {
       const response = await fetch(
-        `http://localhost:3000/getFood?limit=10&page=${page}`
+        `http://localhost:3000/getData?limit=10&page=${page}`
       );
       const result = await response.json();
       setData(result.data);
+      console.log("data", data);
       setTotalPages(result.pagination.totalPages);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -27,7 +43,7 @@ const TableCard = ({ searchTerm }) => {
   };
 
   const handleCheckboxChange = (id, e) => {
-    e.stopPropagation(); 
+    e.stopPropagation();
     setSelectedItems((prevSelected) =>
       prevSelected.includes(id)
         ? prevSelected.filter((item) => item !== id)
@@ -36,14 +52,14 @@ const TableCard = ({ searchTerm }) => {
   };
 
   const handleRowClick = (id) => {
-    navigate(`/viewFood/${id}`);
+    navigate(`/viewData/${id}`);
   };
 
   const handleDelete = async () => {
     try {
       await Promise.all(
         selectedItems.map(async (id) => {
-          await fetch(`http://localhost:3000/deleteFood/${id}`, {
+          await fetch(`http://localhost:3000/deleteData/${id}`, {
             method: "DELETE",
           });
         })
@@ -72,6 +88,7 @@ const TableCard = ({ searchTerm }) => {
 
     return (
       (item.Name && item.Name.toLowerCase().includes(searchText)) ||
+      item.created_at ||
       (item.Standard && item.Standard.toLowerCase().includes(searchText)) ||
       (item.Note && item.Note.toLowerCase().includes(searchText)) ||
       (item.Inspection_ID &&
@@ -80,19 +97,19 @@ const TableCard = ({ searchTerm }) => {
   });
 
   return (
-    <div className="overflow-auto p-4">
+    <div className="overflow-auto py-4">
       {selectedItems.length > 0 && (
         <button
           onClick={handleDelete}
-          className="mb-4 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+          className="mb-4 px-3 py-1 border border-[#1F7B44] bg-white text-white rounded flex text-[#1F7B44]"
         >
-          Delete Selected
+          Delete Selected ( {selectedItems.length} item)
         </button>
       )}
       <table className="min-w-full border-collapse border border-gray-200 text-center">
         <thead>
           <tr className="bg-[#1F7B44] text-white">
-            <th className="border border-gray-200 p-2 w-[30%]">Created At</th>
+            <th className="border border-gray-200 p-2 w-[25%]">Created At</th>
             <th className="border border-gray-200 p-2">Inspection ID</th>
             <th className="border border-gray-200 p-2">Name</th>
             <th className="border border-gray-200 p-2">Standard</th>
@@ -115,7 +132,7 @@ const TableCard = ({ searchTerm }) => {
                   onChange={(e) => handleCheckboxChange(item.id, e)}
                   className="mr-4"
                 />
-                <span>{item.created_at}</span>{" "}
+                <span>{formatDate(item.created_at)}</span>
               </td>
 
               <td className="border border-gray-200 p-2">
