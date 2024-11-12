@@ -87,7 +87,6 @@ const TableCard = ({ searchTerm }) => {
 
     return (
       (item.Name && item.Name.toLowerCase().includes(searchText)) ||
-      item.created_at ||
       (item.Standard && item.Standard.toLowerCase().includes(searchText)) ||
       (item.Note && item.Note.toLowerCase().includes(searchText)) ||
       (item.Inspection_ID &&
